@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import UpdateRestaurantPage from "./UpdateRestaurantPage";
 
 export default function RestaurantDetails() {
   const [restaurantDetails, setRestaurantDetails] = useState([]);
   const { id } = useParams();
+  const [openUpdatePage, setOpenUpdatePage] = useState(false);
 
   useEffect(() => {
     axios
@@ -32,9 +34,18 @@ export default function RestaurantDetails() {
           <b>Telephone:</b> {restaurantDetails.telephone}
         </p>
         <div className="p-1">
-          <button className="bg-green-700 py-1 px-2 mr-1 rounded-lg font-bold">
+          <button
+            onClick={() => setOpenUpdatePage(true)}
+            className="bg-green-700 py-1 px-2 mr-1 rounded-lg font-bold"
+          >
             Update
           </button>
+          {openUpdatePage && (
+            <UpdateRestaurantPage
+              id={restaurantDetails._id}
+              closeUpdatePage={setOpenUpdatePage}
+            />
+          )}
           <button className="bg-red-700 py-1 px-2 ml-1 rounded-lg font-bold">
             Delete
           </button>
