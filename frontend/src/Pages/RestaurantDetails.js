@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UpdateRestaurantPage from "./UpdateRestaurantPage";
 
 export default function RestaurantDetails() {
   const [restaurantDetails, setRestaurantDetails] = useState([]);
   const { id } = useParams();
   const [openUpdatePage, setOpenUpdatePage] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -18,6 +19,24 @@ export default function RestaurantDetails() {
         console.log(err);
       });
   });
+
+  const handleDelete = () => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${restaurantDetails.name}"?`
+    );
+
+    if (confirmDelete) {
+      axios
+        .delete("http://localhost:8000/restaurant/delete/" + id)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("Restaurant details deleted Succesfully");
+            navigate(-1);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   return (
     <div className="homePage-section m-16">
@@ -46,7 +65,10 @@ export default function RestaurantDetails() {
               closeUpdatePage={setOpenUpdatePage}
             />
           )}
-          <button className="bg-red-700 py-1 px-2 ml-1 rounded-lg font-bold">
+          <button
+            onClick={handleDelete}
+            className="bg-red-700 py-1 px-2 ml-1 rounded-lg font-bold"
+          >
             Delete
           </button>
         </div>
