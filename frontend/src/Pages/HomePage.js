@@ -33,13 +33,15 @@ export default function HomePage() {
         )}
       </div>
       <div className="homePage-body">
-        {restaurants.map((restaurant) => (
-          <Link to={`/restaurant-details/${restaurant._id}`}>
-            <div className="bg-gray-50 rounded-lg my-3 p-4">
-              {restaurant.name}
-            </div>
-          </Link>
-        ))}
+        {restaurants
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((restaurant) => (
+            <Link to={`/restaurant-details/${restaurant._id}`}>
+              <div className="bg-gray-50 rounded-lg my-3 p-4">
+                {restaurant.name}
+              </div>
+            </Link>
+          ))}
       </div>
     </div>
   );
