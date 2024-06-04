@@ -6,6 +6,19 @@ export default function UpdateRestaurantPage({ id, closeUpdatePage }) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [telephone, setTelephone] = useState("");
+  const [error, setError] = useState();
+
+  const validateTelephone = () => {
+    const telephoneValid = /^\d{10}$/;
+
+    if (!telephoneValid.test(telephone)) {
+      setError("Telephone no should be 10 digit number.");
+      return false;
+    }
+
+    setError("");
+    return true;
+  };
 
   useEffect(() => {
     axios
@@ -20,6 +33,10 @@ export default function UpdateRestaurantPage({ id, closeUpdatePage }) {
 
   const handleUpdateRestaurant = (e) => {
     e.preventDefault();
+
+    if (!validateTelephone()) {
+      return;
+    }
 
     const updateData = {
       name: name,
@@ -79,12 +96,20 @@ export default function UpdateRestaurantPage({ id, closeUpdatePage }) {
             <label htmlFor="">Telephone No</label>
             <br />
             <input
-              className="w-full rounded-lg outline-none p-1"
+              className={`w-full rounded-lg outline-none p-1 ${
+                error ? "border-red-600 border-2" : ""
+              }`}
               type="text"
               value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
+              onChange={(e) => {
+                setTelephone(e.target.value);
+                if (e.target.value.length === 10) {
+                  setError("");
+                }
+              }}
               required
             />
+            <p className="text-red-600 text-xs font-bold">{error}</p>
           </div>
           <button className="bg-black hover:bg-zinc-800 active:bg-black text-white font-bold my-3 px-3 py-1 rounded-lg cursor-pointer">
             Update
